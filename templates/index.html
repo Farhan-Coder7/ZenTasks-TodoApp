@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
+{% block title %}
+    Home
+{% endblock title %}
 {% block body %}
-
 <div class="container my-4">
     <h1>Welcome to the ZenTasks Todo App</h1>
     <br>
     <h4>Add Task</h4>
-    <form action="/" method="POST">
+    <form action="{{ url_for('home') }}" method="POST">
 
         <div class="mb-3">
             <label for="Title" class="form-label">Todo Title</label>

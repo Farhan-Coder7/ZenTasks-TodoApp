@@ -12,7 +12,7 @@ class Zen(db.Model):
     No = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     desc = db.Column(db.String(500), nullable=False)
-    date = db.Column(db.DateTime, default = datetime.utcnow())
+    date = db.Column(db.DateTime, default = datetime.now(timezone.utc))
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -26,9 +26,18 @@ def home():
     return render_template('index.html', Todo=Todo)
 
 @app.route('/update/<int:no>', methods=['GET', 'POST'])
-def update():
+def update(no):
+    if request.method == 'POST':
+        title = request.form['title']
+        desc = request.form['desc']
+        todo = Zen.query.filter_by(No=no).first()
+        todo.title = title
+        todo.desc = desc
+        db.session.commit()
+        return redirect('/')
+    todo = Zen.query.filter_by(No=no).first()
+    return render_template('update.html', todo=todo)
     
-    return redirect('/')
 
 @app.route('/delete/<int:no>')
 def delete(no):
