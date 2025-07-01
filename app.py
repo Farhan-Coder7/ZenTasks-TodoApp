@@ -51,7 +51,17 @@ def delete(no):
 def about():
     return render_template ('about.html')
 
+@app.route('/search')
+def search():
+    query = request.args.get('query')
+    if query:
+        results = Zen.query.filter(Zen.title.ilike(f'%{query}%')).all()
+        return render_template('search_results.html', results=results, query=query)
+    return render_template('search_results.html', results=[], query="")
+
+
+
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all() # Create the database tables if they don't exist
+        db.create_all() 
     app.run(debug=True)
